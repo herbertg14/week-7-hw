@@ -7,7 +7,7 @@ $("#addTrainButton").on("click",function(){
 	var destination = $("#destinationInput").val().trim();
 
 	var firstTrainTime = $("#firstTimeInput").val().trim();
-	firstTrainTime = moment(firstTrainTime, "hh:mm").subtract(1,"years");
+	firstTrainTime = moment(firstTrainTime, "HH:mm").format("HH:mm");
 
 	var frequency = parseInt($("#frequencyInput").val().trim());
 
@@ -16,15 +16,11 @@ $("#addTrainButton").on("click",function(){
 	console.log("Frequency: "+ frequency);
 	console.log(firstTrainTime);
 
-
-	var nextArrival = "soon";
-	var minutesAway = 10;
 	var newTrain = {
 		trainName: trainName,
 		destination: destination,
 		frequency: frequency,
-		nextArrival: nextArrival,
-		minutesAway: minutesAway
+		start: firstTrainTime
 	}
 
 	trainData.push(newTrain);
@@ -32,18 +28,28 @@ $("#addTrainButton").on("click",function(){
 	return false;
 });
 
+
 trainData.on("child_added", function(childSnapshot, prevChildKey){
 	console.log(childSnapshot.val());
 
-	var trainName = childSnapshot.val().name;
+	var trainName = childSnapshot.val().trainName;
 	var destination = childSnapshot.val().destination;
 	var frequency = childSnapshot.val().frequency;
-	var nextArrival = childSnapshot.val().nextArrival;
-	var minutesAway = childSnapshot.val().minutesAway;
+	var start = childSnapshot.val().start;
+
+	var firstMoment = moment(start, "HH:mm").subtract(1,"years");
+
+	var differenceTime = moment().diff(moment(firstMoment), "minutes");
+
+	var timeRemaining = differenceTime % frequency;
+
+	var timeOfNext = frequency - timeRemaining;
+
+	var nextTrainTime = moment().add(timeOfNext,"minutes");
 
     $("#scheduleTable > tbody").append("<tr><td>" + trainName + "</td><td>" +
-destination + "</td><td>" + frequency + "</td><td>" + nextArrival + "</td><td>"
-+ minutesAway + "</td></tr>");
+destination + "</td><td>" + frequency + "</td><td>" + moment(nextTrainTime).format("HH:mm") + "</td><td>"
++ timeOfNext + "</td></tr>");
 
 })
 
