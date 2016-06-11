@@ -29,9 +29,7 @@ $("#addTrainButton").on("click",function(){
 	return false;
 });
 
-
-trainData.on("child_added", function(childSnapshot, prevChildKey){
-	console.log(childSnapshot.val());
+function everyTime(childSnapshot, prevChildKey){
 
 	var trainName = childSnapshot.val().trainName;
 	var destination = childSnapshot.val().destination;
@@ -48,10 +46,19 @@ trainData.on("child_added", function(childSnapshot, prevChildKey){
 
 	var nextTrainTime = moment().add(timeOfNext,"minutes");
 
-    $("#scheduleTable > tbody").append("<tr><td>" + trainName + "</td><td>" +
-destination + "</td><td>" + frequency + "</td><td>" + moment(nextTrainTime).format("LT") + "</td><td>"
-+ timeOfNext + "</td></tr>");
+    $("#scheduleTable > tbody").append("<tr id=" + trainName + "><td>" + trainName + "</td><td>" + destination + "</td><td>" + frequency + "</td><td>" + moment(nextTrainTime).format("LT") + "</td><td>" + timeOfNext + "</td></tr>");
+}
 
-})
+trainData.on("child_added", everyTime);
+
+// function refresh(){}
+
+
+// function autoRefresh() {
+// 	trainData.on("child_added", refresh);
+// }
+ 
+
+// setInterval('autoRefresh()', 60000);
 
 
