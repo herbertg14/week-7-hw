@@ -11,11 +11,6 @@ $("#addTrainButton").on("click",function(){
 
 	var frequency = parseInt($("#frequencyInput").val().trim());
 
-	console.log("Train Name: " + trainName);
-	console.log("Destination: "+ destination);
-	console.log("Frequency: "+ frequency);
-	console.log(firstTrainTime);
-
 	var newTrain = {
 		trainName: trainName,
 		destination: destination,
@@ -24,6 +19,12 @@ $("#addTrainButton").on("click",function(){
 	}
 
 	trainData.push(newTrain);
+
+
+	$("#trainNameInput").val("");
+	$("#destinationInput").val("");
+	$("#firstTimeInput").val("");
+	$("#frequencyInput").val("");
 
 	return false;
 });
@@ -48,7 +49,7 @@ trainData.on("child_added", function(childSnapshot, prevChildKey){
 	var nextTrainTime = moment().add(timeOfNext,"minutes");
 
     $("#scheduleTable > tbody").append("<tr><td>" + trainName + "</td><td>" +
-destination + "</td><td>" + frequency + "</td><td>" + moment(nextTrainTime).format("HH:mm") + "</td><td>"
+destination + "</td><td>" + frequency + "</td><td>" + moment(nextTrainTime).format("LT") + "</td><td>"
 + timeOfNext + "</td></tr>");
 
 })
